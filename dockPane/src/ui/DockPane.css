@@ -1,0 +1,71 @@
+.widget-dockpane-clickable {
+    cursor: pointer;
+}
+
+.widget-dockpane {
+    display: inline-block;
+}
+
+.widget-dockpane.badge:empty {
+    display: initial;
+    /* Fix padding to stay round */
+    padding: 3px 10px;
+}
+
+.widget-dockpane.label:empty {
+    display: initial;
+    /* Fix padding to stay square */
+    padding: .2em .8em .3em;
+}
+
+.widget-dockpane.badge {
+    min-width: 18px;
+    min-height: 18px;
+}
+
+
+/* The dock panel should take up all available space in the dock pane. */
+
+.widget-dockpanel {
+    width: 100%;
+    height: 100%;
+}
+
+.ReactDock {
+    z-index: 999999 !important;
+}
+
+.ReactDock > div {
+    overflow: visible !important;
+}
+
+.ReactDock button {
+    z-index: 1000001 !important;
+}
+
+/* Keep content from covering the close button */
+.ReactDock-content {
+    position: relative !important;
+}
+.widget-dockpanel {
+    width: 100%;
+    height: 100%;
+}
+
+.widget-dockpanel-clickable {
+    cursor: pointer;
+}
+
+/* react-dock fixes */
+.ReactDock {
+    z-index: 999999 !important;
+}
+
+.ReactDock > div {
+    overflow: hidden !important;
+}
+
+/* Prevent clipping of the close button */
+.ReactDock div {
+    box-sizing: border-box;
+}
