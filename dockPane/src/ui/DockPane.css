@@ -1,71 +1,74 @@
-.widget-dockpane-clickable {
-    cursor: pointer;
-}
-
-.widget-dockpane {
-    display: inline-block;
-}
-
-.widget-dockpane.badge:empty {
-    display: initial;
-    /* Fix padding to stay round */
-    padding: 3px 10px;
-}
-
-.widget-dockpane.label:empty {
-    display: initial;
-    /* Fix padding to stay square */
-    padding: .2em .8em .3em;
-}
-
-.widget-dockpane.badge {
-    min-width: 18px;
-    min-height: 18px;
-}
-
-
-/* The dock panel should take up all available space in the dock pane. */
-
 .widget-dockpanel {
     width: 100%;
     height: 100%;
-}
-
-.ReactDock {
-    z-index: 999999 !important;
-}
-
-.ReactDock > div {
-    overflow: visible !important;
-}
-
-.ReactDock button {
-    z-index: 1000001 !important;
-}
-
-/* Keep content from covering the close button */
-.ReactDock-content {
-    position: relative !important;
-}
-.widget-dockpanel {
-    width: 100%;
-    height: 100%;
+    position: relative;
 }
 
 .widget-dockpanel-clickable {
     cursor: pointer;
 }
 
-/* react-dock fixes */
-.ReactDock {
-    z-index: 999999 !important;
-}
-
-.ReactDock > div {
-    overflow: hidden !important;
-}
-
-/* Prevent clipping of the close button */
-.ReactDock div {
+.widget-dockpanel-body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    overflow: hidden;
+    position: relative;
     box-sizing: border-box;
+    /* Room for the Atlas top bar, which lies over the dock pane when no z-index is set */
+    padding-top: 48px;
+}
+
+.widget-dockpanel-body.widget-dockpanel-bottom {
+    padding-top: 0;
+}
+
+.widget-dockpanel-header {
+    height: 36px;
+    min-height: 36px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 8px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f5f5f5;
+    box-sizing: border-box;
+}
+
+.widget-dockpanel-close {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0;
+    line-height: 22px;
+}
+
+.widget-dockpanel-content {
+    flex: 1;
+    overflow: auto;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+/* Studio Pro design mode */
+.widget-dockpanel-preview {
+    border: 1px dashed #9ca3af;
+    background-color: #ffffff;
+}
+
+.widget-dockpanel-preview .widget-dockpanel-header {
+    justify-content: space-between;
+    font-size: 12px;
+    color: #555;
+}
+
+.widget-dockpanel-preview-content {
+    min-height: 60px;
+    padding: 12px;
 }

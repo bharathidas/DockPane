@@ -1,47 +1,33 @@
-import {
-    ReactNode,
-    ReactElement,
-    Fragment,
-    createElement,
-    useState,
-    useEffect
-} from "react";
+import { CSSProperties, ReactElement, ReactNode, createElement, useCallback, useEffect, useState } from "react";
 
 import classNames from "classnames";
 import { Dock } from "react-dock";
 
-import "../ui/DockPane.css";
+export type DockPosition = "left" | "right" | "top" | "bottom";
+export type DockDimMode = "none" | "transparent" | "opaque";
+
+export const DEFAULT_SIZE = 0.35;
 
 export interface DockPaneInputProps {
-    position?: "left" | "right" | "top" | "bottom";
-    isVisible?: boolean;
-    dimMode?: "none" | "transparent" | "opaque";
-    size?: number;
+    position: DockPosition;
+    isVisible: boolean;
+    dimMode: DockDimMode;
+    size: number;
+    /** Not set: the dock pane gets no z-index, as in version 1.0.0. */
     zIndex?: number;
-    fluid?: boolean;
+    fluid: boolean;
     content?: ReactNode;
     className?: string;
+    style?: CSSProperties;
     clickable?: boolean;
     onClickAction?: () => void;
-    getRef?: (node: HTMLDivElement | null) => void;
+    onClose?: () => void;
 }
 
-export function DockPaneInput(
-    props: DockPaneInputProps
-): ReactElement {
-    const {
-        position = "left",
-        isVisible = true,
-        dimMode = "transparent",
-        size = 0.35,
-        zIndex = 999999,
-        fluid = true,
-        content,
-        className,
-        clickable,
-        onClickAction,
-        getRef
-    } = props;
+export function DockPaneInput(props: DockPaneInputProps): ReactElement {
+    const { position, isVisible, dimMode, size, zIndex, fluid, content, className, style, clickable, onClickAction } =
+        props;
+    const { onClose } = props;
 
     const [visible, setVisible] = useState(isVisible);
 
@@ -49,23 +35,15 @@ export function DockPaneInput(
         setVisible(isVisible);
     }, [isVisible]);
 
-    const atlasTopBarHeight = 48;
+    const close = useCallback(() => {
+        setVisible(false);
+        onClose?.();
+    }, [onClose]);
 
     return (
         <div
-            ref={getRef}
-            className={classNames(
-                "widget-dockpanel",
-                className,
-                {
-                    "widget-dockpanel-clickable": clickable
-                }
-            )}
-            style={{
-                width: "100%",
-                height: "100%",
-                position: "relative"
-            }}
+            className={classNames("widget-dockpanel", className, { "widget-dockpanel-clickable": clickable })}
+            style={style}
             onClick={onClickAction}
         >
             <Dock
@@ -73,88 +51,30 @@ export function DockPaneInput(
                 isVisible={visible}
                 dimMode={dimMode}
                 size={size}
-                zIndex={zIndex}
+                // react-dock falls back to its own very high z-index for undefined, "auto" keeps the 1.0.0 stacking.
+                zIndex={zIndex ?? ("auto" as unknown as number)}
                 fluid={fluid}
+                onVisibleChange={nowVisible => {
+                    if (!nowVisible) {
+                        close();
+                    }
+                }}
             >
-                <div
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        backgroundColor: "#ffffff",
-                        overflow: "hidden",
-                        position: "relative",
-
-                        ...(position !== "bottom"
-                            ? {
-                                  paddingTop:
-                                      atlasTopBarHeight
-                              }
-                            : {})
-                    }}
-                >
-                    <div
-                        style={{
-                            height: "36px",
-                            minHeight: "36px",
-                            display: "flex",
-                            justifyContent: "flex-end",
-                            alignItems: "center",
-                            padding: "0 8px",
-                            borderBottom:
-                                "1px solid #ddd",
-                            backgroundColor:
-                                "#f5f5f5",
-                            boxSizing:
-                                "border-box"
-                        }}
-                    >
+                <div className={classNames("widget-dockpanel-body", `widget-dockpanel-${position}`)}>
+                    <div className="widget-dockpanel-header">
                         <button
                             type="button"
+                            className="widget-dockpanel-close"
+                            aria-label="Close"
                             onClick={e => {
                                 e.stopPropagation();
-                                setVisible(false);
-                            }}
-                            style={{
-                                width: "24px",
-                                height: "24px",
-                                border:
-                                    "1px solid #ccc",
-                                background:
-                                    "#fff",
-                                cursor:
-                                    "pointer",
-                                fontSize:
-                                    "14px",
-                                fontWeight:
-                                    "bold",
-                                padding: 0,
-                                lineHeight:
-                                    "22px"
+                                close();
                             }}
                         >
                             ×
                         </button>
                     </div>
-
-                    <div
-                        style={{
-                            flex: 1,
-                            overflow: "auto",
-                            padding: "12px",
-                            boxSizing:
-                                "border-box"
-                        }}
-                    >
-                        {Array.isArray(content)
-                            ? createElement(
-                                  Fragment,
-                                  {},
-                                  ...content
-                              )
-                            : content}
-                    </div>
+                    <div className="widget-dockpanel-content">{content}</div>
                 </div>
             </Dock>
         </div>

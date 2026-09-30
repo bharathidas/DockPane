@@ -1,32 +1,21 @@
 import { ReactElement, createElement } from "react";
 
-//import { parseInlineStyle } from "@mendix/pluggable-widgets-tools";
-
-import { DockPaneInput, DockPaneInputProps } from "./components/DockPaneInput";
 import { DockPanePreviewProps } from "../typings/DockPaneProps";
 
-function parentInline(node?: HTMLElement | null): void {
-    // Temporary fix, the web modeler add a containing div, to render inline we need to change it.
-    if (node && node.parentElement && node.parentElement.parentElement) {
-        node.parentElement.parentElement.style.display = "inline-block";
-    }
-}
-
-function transformProps(props: DockPanePreviewProps): DockPaneInputProps {
-    return {
-        
-        className: props.className,
-        clickable: false,
-        //style: parseInlineStyle(props.style),
-       // content: props.content,
-        
-    };
-}
-
+// The real dock pane is fixed to a side of the window and would cover the page editor, so design mode
+// shows it as a box in the page flow with a drop zone for the content.
 export function preview(props: DockPanePreviewProps): ReactElement {
+    const Content = props.contentKey.renderer;
+
     return (
-        <div ref={parentInline}>
-            <DockPaneInput {...transformProps(props)}></DockPaneInput>
+        <div className={`widget-dockpanel-preview ${props.class}`} style={props.styleObject}>
+            <div className="widget-dockpanel-header">
+                <span>Dock Pane</span>
+                <span className="widget-dockpanel-close">×</span>
+            </div>
+            <Content caption="Content of the dock pane">
+                <div className="widget-dockpanel-preview-content" />
+            </Content>
         </div>
     );
 }

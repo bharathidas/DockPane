@@ -1,91 +1,67 @@
-import {
-    ReactElement,
-    //CSSProperties,
-    createElement,
-    useCallback
-} from "react";
+import { ReactElement, createElement, useCallback } from "react";
 
 import { DockPaneContainerProps } from "../typings/DockPaneProps";
-import { DockPaneInput } from "./components/DockPaneInput";
+import { DEFAULT_SIZE, DockDimMode, DockPaneInput, DockPosition } from "./components/DockPaneInput";
 import "./ui/DockPane.css";
 
-type DockPosition = "left" | "right" | "top" | "bottom";
-type DockDimMode = "none" | "transparent" | "opaque";
-
 function getPosition(position?: string): DockPosition {
-    switch (position) {
+    switch (position?.trim().toLowerCase()) {
         case "right":
             return "right";
-
         case "top":
             return "top";
-
         case "bottom":
             return "bottom";
-
-        case "left":
         default:
             return "left";
     }
 }
 
 function getDimMode(mode?: string): DockDimMode {
-    switch (mode) {
+    switch (mode?.trim().toLowerCase()) {
+        case "none":
+            return "none";
         case "transparent":
             return "transparent";
-
-        case "opaque":
-            return "opaque";
-
-        case "none":
         default:
             return "opaque";
     }
 }
 
 export function DockPane(props: DockPaneContainerProps): ReactElement {
-    const {
-        positionKey,
-        isVisibleKey,
-        dimmodeKey,
-        sizeKey,
-        zIndexKey,
-        fluidKey,
-        contentKey,
-        onClickAction,
-        //style
-    } = props;
+    const { positionKey, isVisibleKey, dimmodeKey, sizeKey, zIndexKey, fluidKey, contentKey, onClickAction } = props;
 
     const onClickHandler = useCallback(() => {
         if (onClickAction?.canExecute) {
             onClickAction.execute();
         }
     }, [onClickAction]);
-    
 
-    let sizeValue =  0.35;
-    if(sizeKey?.value){
-        sizeValue = Number(sizeKey.value);
-    }
-    
-    let ZindexValue =  0.35;
-    if(zIndexKey?.value){
-        ZindexValue = Number(zIndexKey.value);
-    }
+    // Writes the closed state back, so that setting the attribute to true opens the dock pane again.
+    const onClose = useCallback(() => {
+        if (isVisibleKey?.status === "available" && !isVisibleKey.readOnly && isVisibleKey.value !== false) {
+            isVisibleKey.setValue(false);
+        }
+    }, [isVisibleKey]);
+
+    // Empty Integer and Decimal attributes arrive as 0, so zero and negative values are treated as not set.
+    const sizeValue = Number(sizeKey?.value);
+    const zIndexValue = Math.round(Number(zIndexKey?.value));
 
     return (
         <DockPaneInput
             position={getPosition(positionKey?.value)}
-            isVisible={isVisibleKey?.value|| false}
+            isVisible={isVisibleKey ? isVisibleKey.value === true : true}
             dimMode={getDimMode(dimmodeKey?.value)}
-            size={sizeValue}
-            zIndex={ZindexValue}
-            fluid={fluidKey?.value}
+            size={isFinite(sizeValue) && sizeValue > 0 ? sizeValue : DEFAULT_SIZE}
+            zIndex={isFinite(zIndexValue) && zIndexValue > 0 ? zIndexValue : undefined}
+            fluid={fluidKey?.value ?? true}
             content={contentKey}
             className={props.class}
-            //style={style as CSSProperties}
+            style={props.style}
             clickable={!!onClickAction}
             onClickAction={onClickHandler}
+            onClose={onClose}
         />
     );
 }
