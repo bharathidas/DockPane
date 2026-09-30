@@ -3,6 +3,13 @@ The DockPane widget is a modern, flexible docking panel solution built using Rea
 
 It enables developers to display contextual content, forms, dashboards, filters, notifications, and custom UI panels in dockable containers that can slide in from any side of the application. 
 
+![Dock Pane](docs/cover.jpg)
+
+## Documentation
+
+- [Dock Pane 10.24.17.docx](docs/Dock%20Pane%2010.24.17.docx): install, upgrade, configuration, properties, positions, dim modes, size and z-index, styling and limitations.
+- [Marketplace documentation](docs/Marketplace%20Documentation%20-%20Dock%20Pane.md): the same in short form.
+
 ## Version 1.1.0 for Mendix Studio Pro 10.24.17
 
 Dock Pane 1.1.0 is rebuilt for **Mendix Studio Pro 10.24.17** and the Mendix React client.
@@ -101,7 +108,17 @@ https://dock-sandbox.mxapps.io/index.html?profile=Responsive
 ## Issues, suggestions and feature requests:
 https://github.com/bharathidas/DockPane/issues
 
-## Screenshots:
+## Screenshots (version 1.1.0, Mendix 10.24.17):
+
+| | |
+| --- | --- |
+| ![Right, opaque dim](docs/screenshot-1.png) | ![Left](docs/screenshot-2.png) |
+| ![Top](docs/screenshot-3.png) | ![Bottom](docs/screenshot-4.png) |
+| ![Dim mode none](docs/screenshot-5.png) | ![Dim mode transparent](docs/screenshot-6.png) |
+
+![Fluid false, size 300 pixels](docs/screenshot-7.png)
+
+## Screenshots (version 1.0.0):
 
 <img width="1365" height="646" alt="Screenshot_1" src="https://github.com/user-attachments/assets/73ecbd95-3e73-4203-b7c2-74d0adc16cce" />
 
